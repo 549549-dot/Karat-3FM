@@ -1,6 +1,6 @@
 char ver[ ] = "134k03";
 
-#define SI_OVERCLOCK 750000000L
+//#define SI_OVERCLOCK 750000000L
 #define ENCODER_OPTIMIZE_INTERRUPTS
 
 #define max_number_of_bands	99 // Максимальное оличество диапазонов.
@@ -34,8 +34,8 @@ struct general_set {
   byte stp_set = 3; //Начальный шаг настройки.
   byte band_set = 0; // Стартовый диапазон.
   byte number_of_bands_set = 0; // Количество диапазонов.
-  unsigned long usb_bfo_freq_set = 21200000UL; // Начальная частота опоры USB при первом включении.
-  unsigned long lsb_bfo_freq_set = 22200000UL; // Начальная частота опоры LSB при первом включении.
+  unsigned long usb_bfo_freq_set = 21195000UL; // Начальная частота опоры USB при первом включении.
+  unsigned long lsb_bfo_freq_set = 22195000UL; // Начальная частота опоры LSB при первом включении.
   int lo_cal_freq_set  = 0; // калибровка опоры 500кГц.
   int Si_Xtall_calFreq_set = 5000; // Начальная частота калибровки кварца, Гц.
   int ifshift_set = 0;
@@ -71,7 +71,7 @@ struct band_set {
 //
 
 byte menu = 0; //Начальное положение меню.
-unsigned int arraystp[] = {1, 10, 50, 100, 1000}; //шаги настройки * 10 герц.
+unsigned int arraystp[] = {1, 10, 50, 100, 1000, 10000}; //шаги настройки * 10 герц.
 
 byte mypower;
 byte mybatt;
@@ -254,19 +254,19 @@ void readencoder() { // работа с енкодером
 
       case 0: //Основная настройка частоты
         if (newPosition > oldPosition && vfo_freq <= max_freq * 100000UL) {
-          if (vfo_freq % (arraystp[stp] * 10)) {
-            vfo_freq = vfo_freq + (arraystp[stp] * 10) - (vfo_freq % (arraystp[stp] * 10));
+          if (vfo_freq % (arraystp[stp] * 10UL)) {
+            vfo_freq = vfo_freq + (arraystp[stp] * 10UL) - (vfo_freq % (arraystp[stp] * 10UL));
           }
           else {
-            vfo_freq = vfo_freq + (arraystp[stp] * 10);
+            vfo_freq = vfo_freq + (arraystp[stp] * 10UL);
           }
         }
         if (newPosition < oldPosition && vfo_freq >= min_freq * 100000UL) {
-          if (vfo_freq % (arraystp[stp] * 10)) {
-            vfo_freq = vfo_freq - (vfo_freq % (arraystp[stp] * 10));
+          if (vfo_freq % (arraystp[stp] * 10UL)) {
+            vfo_freq = vfo_freq - (vfo_freq % (arraystp[stp] * 10UL));
           }
           else {
-            vfo_freq = vfo_freq - (arraystp[stp] * 10);
+            vfo_freq = vfo_freq - (arraystp[stp] * 10UL);
           }
         }
         if (vfo_freq < min_freq * 100000UL) vfo_freq = min_freq * 100000UL;
@@ -439,7 +439,7 @@ void mainscreen() { //Процедура рисования главного э�
         if (actencf) {
           display.print(" ");
         }
-        else{
+        else {
           display.print(".");
         }
         if (tm.Hour < 10) display.print(" ");
@@ -472,7 +472,7 @@ void mainscreen() { //Процедура рисования главного э�
       break;
 
     case 2: //Меню 2 - шаг настройки
-      display.println(arraystp[stp] * 10);
+      display.println(arraystp[stp] * 10UL);
       display.setTextSize(1);
       display.print(menu);
       display.print("  Step Hz");
@@ -611,12 +611,12 @@ void vfosetup() {
     si.set_freq((vfo_freq + usb_bfo_freq + lo_freq + lo_cal_freq + RXifshift), 0, (usb_bfo_freq + RXifshift));
   }
   else {
-    si.set_freq((vfo_freq + lsb_bfo_freq + lo_freq + lo_cal_freq + RXifshift), 0, (lsb_bfo_freq + RXifshift));
+    si.set_freq((vfo_freq + lsb_bfo_freq - (lo_freq + lo_cal_freq) + RXifshift), 0, (lsb_bfo_freq + RXifshift));
   }
 }
 
 void si5351init() {
-  si.setup(0, 0, 0);
+  si.setup(2, 0, 0);
   si.cload(si_cload);
 }
 

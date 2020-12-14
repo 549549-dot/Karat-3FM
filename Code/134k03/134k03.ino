@@ -75,7 +75,7 @@ unsigned int arraystp[] = {1, 10, 50, 100, 1000, 10000}; //шаги настро
 
 byte mypower;
 byte mybatt;
-byte temperature;
+int8_t temperature;
 int screenstep = 1000;
 
 long oldPosition  = 0;
@@ -173,7 +173,7 @@ void tempsensor () {
     reqtemp = true;
   }
   if (millis() - previoustemp > 8000 && reqtemp) {
-    temperature = (byte)(0.5 + sensors.getTempCByIndex(0));
+    temperature = (int8_t)(0.5 + sensors.getTempCByIndex(0));
     previoustemp = millis();
     reqtemp = false;
   }
@@ -616,7 +616,7 @@ void vfosetup() {
 }
 
 void si5351init() {
-  si.setup(3, 0, 0);
+  si.setup(0, 0, 0);
   si.cload(si_cload);
 }
 

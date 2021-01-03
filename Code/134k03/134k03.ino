@@ -35,9 +35,9 @@ struct general_set {
   byte band_set = 0; // Стартовый диапазон.
   byte number_of_bands_set = 0; // Количество диапазонов.
   unsigned long usb_bfo_freq_set = 21195000UL; // Начальная частота опоры USB при первом включении.
-  unsigned long lsb_bfo_freq_set = 22195000UL; // Начальная частота опоры LSB при первом включении.
+  unsigned long lsb_bfo_freq_set = 22199950UL; // Начальная частота опоры LSB при первом включении.
   int lo_cal_freq_set  = 0; // калибровка опоры 500кГц.
-  int Si_Xtall_calFreq_set = 5000; // Начальная частота калибровки кварца, Гц.
+  int Si_Xtall_calFreq_set = 5700; // Начальная частота калибровки кварца, Гц.
   int ifshift_set = 0;
   byte batt_cal_set = 212; // Начальная калибровка вольтметра.
   boolean reverse_encoder_set = false; //Реверс энкодера.
